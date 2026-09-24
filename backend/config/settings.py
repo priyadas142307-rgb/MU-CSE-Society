@@ -12,7 +12,7 @@ def env_list(name: str, default: str = "") -> list[str]:
 
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-to-a-strong-random-secret")
 DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes", "on"}
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
+ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "*")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -38,14 +38,22 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = env_list(
-    "CORS_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173",
-)
-CSRF_TRUSTED_ORIGINS = env_list(
-    "CSRF_TRUSTED_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173",
-)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.onrender\.com$",
+    r"^http:\/\/localhost:\d+$",
+    r"^http:\/\/127\.0\.0\.1:\d+$",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
+    "https://*.onrender.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+] + env_list("CSRF_TRUSTED_ORIGINS", "")
+
 
 ROOT_URLCONF = "config.urls"
 
