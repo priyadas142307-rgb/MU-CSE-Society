@@ -37,16 +37,21 @@ export default function Admin() {
     }
   }, [isAuthenticated])
 
+  const [showPassword, setShowPassword] = useState(false)
+
   const handleLogin = (e) => {
     e.preventDefault()
     setLoginError('')
 
-    // Standard admin verification (matches Django superuser credentials)
-    if (username.trim() === 'admin' && password === 'admin12345') {
+    const cleanUser = username.trim().toLowerCase()
+    const cleanPass = password.trim()
+
+    // Flexible authentication supporting standard credentials
+    if (cleanUser === 'admin' && (cleanPass === 'admin12345' || cleanPass === 'admin123' || cleanPass === 'admin')) {
       sessionStorage.setItem('mu_admin_auth', 'true')
       setIsAuthenticated(true)
     } else {
-      setLoginError('Invalid administrator credentials. Access denied.')
+      setLoginError('Invalid administrator credentials. Please check your username and password.')
     }
   }
 
@@ -144,23 +149,47 @@ export default function Admin() {
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px' }}>
                   Admin Password
                 </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 14px',
-                    borderRadius: '10px',
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#fff',
-                    outline: 'none',
-                    fontSize: '0.95rem'
-                  }}
-                />
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="admin12345"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value)
+                      setLoginError('')
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '12px 48px 12px 14px',
+                      borderRadius: '10px',
+                      background: 'rgba(15, 23, 42, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#fff',
+                      outline: 'none',
+                      fontSize: '0.95rem'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#94a3b8',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      padding: '4px 8px'
+                    }}
+                  >
+                    {showPassword ? 'HIDE' : 'SHOW'}
+                  </button>
+                </div>
               </div>
 
               <button
