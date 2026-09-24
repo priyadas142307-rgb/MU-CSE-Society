@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+const apiBaseUrl = rawApiUrl.replace(/\/+$/, '')
 
 function Home() {
   const [message, setMessage] = useState('Loading...')
