@@ -1,10 +1,3 @@
-"""
-Django settings for the MU CSE Society backend.
-
-The application works locally with SQLite and can use PostgreSQL in production
-when DATABASE_URL is provided by the hosting platform.
-"""
-
 import os
 from pathlib import Path
 
@@ -13,13 +6,12 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-def env_list(name, default=""):
+def env_list(name: str, default: str = "") -> list[str]:
     return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
 
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-this-secret-key")
-DEBUG = os.getenv("DEBUG", "True").lower() in {"1", "true", "yes"}
-
+SECRET_KEY = os.getenv("SECRET_KEY", "change-me-to-a-strong-random-secret")
+DEBUG = os.getenv("DEBUG", "False").lower() in {"1", "true", "yes", "on"}
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 INSTALLED_APPS = [
@@ -50,7 +42,10 @@ CORS_ALLOWED_ORIGINS = env_list(
     "CORS_ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173",
 )
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+)
 
 ROOT_URLCONF = "config.urls"
 
